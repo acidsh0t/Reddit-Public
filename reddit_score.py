@@ -7,7 +7,7 @@ import easygui
 #Login details
 reddit = praw.Reddit(client_id='', \
                      client_secret='', \
-                     user_agent='Data Scrape Practice', \
+                     user_agent='', \
                      username='', \
                      password='')
 
@@ -26,10 +26,8 @@ elif cat_selection == 'Hot':
     sub_choice = sub_choice.hot(limit=post_no)
 elif cat_selection == 'New':
     sub_choice = sub_choice.new(limit=post_no)
-'''
-elif cat_selection == 'Gilded': #Not functional
-    sub_choice = sub_choice.gilded(limit=post_no)
-'''
+#elif cat_selection == 'Gilded': #Not functional
+#    sub_choice = sub_choice.gilded(limit=post_no)
 elif cat_selection == 'Controversial':
     sub_choice = sub_choice.controversial(limit=post_no)
 elif cat_selection == 'Search':
