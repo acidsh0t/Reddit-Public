@@ -15,11 +15,11 @@ from nltk.tokenize import word_tokenize
 box_title = 'Reddit Scraper'
 
 #Login details
-reddit = praw.Reddit(client_id='22I-xUO6EFiCh_FMGz7-hA', \
-                     client_secret='CyEKLTzIQk-YX4VGfJJU7Mjc9Xe2xQ', \
-                     user_agent='Data Scrape Practice', \
-                     username='acidsh0t', \
-                     password='k$JpGtFz#gxP9iDM')
+reddit = praw.Reddit(client_id='', \
+                     client_secret='', \
+                     user_agent='', \
+                     username='', \
+                     password='')
 
 #Sub selection
 _sub_choice = str(eg.enterbox(msg='What sub do you want to analyse? \n (r/[just type this])',title=box_title))
