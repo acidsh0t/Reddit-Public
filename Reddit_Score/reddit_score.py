@@ -1,11 +1,11 @@
 #!python3
 
-import praw
-import pandas as pd
 import datetime as dt
 from datetime import datetime
 import easygui as eg
 import matplotlib.pyplot as plt
+import pandas as pd
+import praw
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 
@@ -17,7 +17,7 @@ box_title = 'Reddit Scraper'
 #Login details
 reddit = praw.Reddit(client_id='', \
                      client_secret='', \
-                     user_agent='Data Scrape Practice', \
+                     user_agent='', \
                      username='', \
                      password='')
 
@@ -46,9 +46,7 @@ def remove_stopwords(text_string):
             filtered_words.append(word)
     filtered_list = [ ' {} '.format(x) for x in filtered_words ] #adds space between list items
     text_string = ''.join([str(elem) for elem in filtered_list]) #converts list into str
-    text_string = text_string.split()
     return text_string
-
 
 def count_in_str(text_string): #counts individual words in str
     word_count = {}
@@ -63,6 +61,7 @@ def word_counter(df): #counts words in df
     title_list = list(df['title']) #creates list from title column
     title_list = [ ' {} '.format(x) for x in title_list ] #adds space between list items
     title_str = ''.join([str(elem) for elem in title_list]) #converts list into str
+    title_str = title_str.lower()
     title_str = remove_stopwords(title_str)
     title_str = remove_punctuation(title_str)
     count = count_in_str(title_str)
@@ -73,6 +72,14 @@ def word_counter(df): #counts words in df
     path = eg.filesavebox(msg='save location',title='Word Counter',default='word_count.csv')
 
     count_table.to_csv(path)
+
+def average(x): #gets mean
+    try:
+        y = sum(x)/len(x)
+    except:
+        y = 0
+    y = '%.2f'%y
+    return y
 
 #Category selection
 cat_choices = ['Hot','Top','New','Controversial','Search']
@@ -178,13 +185,54 @@ for post in topics_data['time_created']:
 
 topics_data['time_window'] = time_window #adds time_window to topics_data
 
-#Create score bar chart with grouped time
-score_graph = pd.DataFrame(topics_data,columns=['score','time_window'])
-score_graph.plot(x = 'time_window', y = 'score', kind = 'bar', title = 'Score per time', legend = False,)
+#Gets average score per time window
+print('Calculating average scores')
+_avg_04 = topics_data[topics_data['time_window'] == '0h-4h']['score'].to_list()
+_avg_08 = topics_data[topics_data['time_window'] == '4h-8h']['score'].to_list()
+_avg_12 = topics_data[topics_data['time_window'] == '8h-12h']['score'].to_list()
+_avg_16 = topics_data[topics_data['time_window'] == '12h-16h']['score'].to_list()
+_avg_20 = topics_data[topics_data['time_window'] == '16h-20h']['score'].to_list()
+_avg_24 = topics_data[topics_data['time_window'] == '20h-24h']['score'].to_list()
+
+avg_04 = average(_avg_04)
+avg_08 = average(_avg_08)
+avg_12 = average(_avg_12)
+avg_16 = average(_avg_16)
+avg_20 = average(_avg_20)
+avg_24 = average(_avg_24)
+
+mean_score = pd.DataFrame({ 'Time Window':['0h-4h','4h-8h','8h-12h','12h-16h','16h-20h','20h-24h'],
+                            'Average Score':[avg_04,avg_08,avg_12,avg_16,avg_20,avg_24]})
+
+mean_score["Average Score"]=mean_score["Average Score"].astype(float)
+mean_score.plot(x = 'Time Window', y = 'Average Score', kind = 'bar', title = 'Average Score per Time Window', legend = False,)
+plt.show()
+
+#Gets comments per time window
+print('Calculating average scores')
+_avg_04 = topics_data[topics_data['time_window'] == '0h-4h']['comms_num'].to_list()
+_avg_08 = topics_data[topics_data['time_window'] == '4h-8h']['comms_num'].to_list()
+_avg_12 = topics_data[topics_data['time_window'] == '8h-12h']['comms_num'].to_list()
+_avg_16 = topics_data[topics_data['time_window'] == '12h-16h']['comms_num'].to_list()
+_avg_20 = topics_data[topics_data['time_window'] == '16h-20h']['comms_num'].to_list()
+_avg_24 = topics_data[topics_data['time_window'] == '20h-24h']['comms_num'].to_list()
+
+avg_04 = average(_avg_04)
+avg_08 = average(_avg_08)
+avg_12 = average(_avg_12)
+avg_16 = average(_avg_16)
+avg_20 = average(_avg_20)
+avg_24 = average(_avg_24)
+
+mean_comm = pd.DataFrame({ 'Time Window':['0h-4h','4h-8h','8h-12h','12h-16h','16h-20h','20h-24h'],
+                            'Average Comments':[avg_04,avg_08,avg_12,avg_16,avg_20,avg_24]})
+
+mean_comm["Average Comments"]=mean_comm["Average Comments"].astype(float)
+mean_comm.plot(x = 'Time Window', y = 'Average Comments', kind = 'bar', title = 'Average Comments per Time Window', legend = False,)
 plt.show()
 
 #Dialog box to select save location
-print('Saving')
+print('Saving .csv file')
 if cat_selection == 'Search':
     path = eg.filesavebox(default=str(_sub_choice + '_' + cat_selection + '_' + keyword +'_'+ str(post_no)+'.csv'))
 else:
@@ -193,3 +241,4 @@ else:
 #Send to CSV
 topics_data.to_csv(path, index=False)
 print('Done')
+quit()
