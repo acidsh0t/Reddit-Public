@@ -177,7 +177,7 @@ for post in topics_data['time_created']:
         _time_window = '12h-16h'
         time_window.append(_time_window)
     elif post >= time_16 and post < time_20:
-        _time_window = '16h -20h'
+        _time_window = '16h-20h'
         time_window.append(_time_window)
     elif post >= time_20 and post < time_24:
         _time_window = '20h-24h'
