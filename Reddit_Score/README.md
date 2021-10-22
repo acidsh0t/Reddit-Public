@@ -7,3 +7,7 @@ As it stands now, it will graph average scores and comment numbers based on time
 User will be prompted if they wish to count word frequency shared by all posts in selected by the inputs.
 The raw data will also be saved as .csv file for further processing later.
 Enjoy!
+
+## Requirements
+- Reddit API access (details in base tutorial above)
+- Reddit account
