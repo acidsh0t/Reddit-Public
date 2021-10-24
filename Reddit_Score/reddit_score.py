@@ -1,4 +1,4 @@
-#!python3
+#! python3
 
 import datetime as dt
 from datetime import datetime
